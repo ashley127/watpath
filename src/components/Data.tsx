@@ -25,6 +25,11 @@ interface IPost {
     requirementsDescription: string
 }
 
+interface DataProps{
+  subject: string;
+  code:string;
+}
+
 const defaultPosts:IPost[] = [];
 
 const generateTermCode = (year: number, month: number): string => {
@@ -35,11 +40,11 @@ const generateTermCode = (year: number, month: number): string => {
   return `${a}${yy.toString().padStart(2, '0')}${m}`;
 };
 
-const generateApiUrl = (termCode: string): string => {
-  return `https://openapi.data.uwaterloo.ca/v3/Courses/${termCode}`;
+const generateApiUrl = (termCode: string, subject: string, code: string): string => {
+  return `https://openapi.data.uwaterloo.ca/v3/Courses/${termCode}/${subject}/${code}`;
 };
 
-export default function Data(){
+const Data: React.FC<DataProps> = ({subject, code}) => {
     const [posts, setPosts]: [IPost[], (posts: IPost[]) => void] = React.useState(defaultPosts);
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true);
     const [error, setError]: [string, (error: string) => void] = React.useState("");
@@ -58,7 +63,7 @@ export default function Data(){
         const year = 2024;
         const month = 9;
         const termCode = generateTermCode(year, month);
-        const apiUrl = generateApiUrl(termCode);
+        const apiUrl = generateApiUrl(termCode, subject, code);
         const source = cancelToken.source()
         setCancelTokenSource(source);
     
@@ -85,19 +90,21 @@ export default function Data(){
             setError(error);
             setLoading(false);
           })
-    }, []);
+    }, [subject, code]);
     return(
         <Box
         id="image"
         sx={(theme) => ({
           mt: { xs: 8, sm: 10 },
           alignSelf: 'center',
+          textAlign: 'center',
           height: { xs: 200, sm: 700 },
           width: '100%',
           backgroundSize: 'cover',
           borderRadius: '10px',
           outline: '1px solid',
           overflowX: 'hidden',
+          padding: 2,
          overflowY: 'auto',
           outlineColor:
             theme.palette.mode === 'light'
@@ -110,15 +117,16 @@ export default function Data(){
         })}
         >
             {loading && <button onClick={handleCancelClick}>Cancel</button>}
-            <ul className="posts">
+            <ul className="posts" style={{ padding: 0, margin: 0, listStyleType: 'none'}}>
             {posts.map((post) => (
-            <li key={post.courseId}>
-                <h3>{post.title}</h3>
-                <p>{post.description}</p>
+            <li key={post.courseId}  style={{ padding: '10px 0' }}>
+                <h3 style={{ margin: 0 }}>{post.title}</h3>
+                <p style={{ margin: 0 }}>{post.requirementsDescription}</p>
             </li>
             ))}
             </ul>
             {error && <p className="error">{error}</p>}
         </Box>
     )
-}
+};
+export default Data;

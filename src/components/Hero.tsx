@@ -7,14 +7,33 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import Data from "./Data"
-import axios, { CancelTokenSource } from 'axios';
-
+import Data from "./Data";
+import { useState } from 'react';
 
 export default function Hero() {
- 
     const [showData, setData] = React.useState(false)
-    const handleClick = () => setData(true);
+    const [subject, setSubject] = useState<string>('');
+    const [code, setCode] = useState<string>('');
+    const [input, setInput] = useState<string>('');
+
+    const handleClick = () => {
+      const regex = /^([a-zA-Z]+)\s+(\d+)$/;
+      const match = input.match(regex);
+
+      if (match) {
+        setSubject(match[1]);
+        setCode(match[2]);
+        setData(true);
+        setInput('');
+      } else {
+        setData(false);
+      }
+    }
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
+      setInput(event.target.value);
+    }
+
   return (
     <Box
       id="hero"
@@ -45,7 +64,8 @@ export default function Hero() {
               flexDirection: { xs: 'column', md: 'row' },
               alignSelf: 'center',
               textAlign: 'center',
-              fontSize: 'clamp(3.5rem, 10vw, 4rem)',
+              fontSize: 'clamp(4.5rem, 11vw, 5rem)',
+              fontFamily: 'sans-serif',
             }}
           >
             Plan your&nbsp;
@@ -53,7 +73,8 @@ export default function Hero() {
               component="span"
               variant="h1"
               sx={{
-                fontSize: 'clamp(3rem, 10vw, 4rem)',
+                fontFamily: 'sans-serif',
+                fontSize: 'clamp(4rem, 11vw, 5rem)',
                 color: (theme) =>
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}
@@ -82,6 +103,8 @@ export default function Hero() {
               variant="outlined"
               aria-label="Course code"
               placeholder="CS 444"
+              value = {input}
+              onChange={handleChange}
               inputProps={{
                 autoComplete: 'off',
                 'aria-label': 'Course code',
@@ -97,7 +120,7 @@ export default function Hero() {
               Terms & Conditions
             </Link>
           </Typography>
-          {showData? <Data/> : null}
+          {showData? <Data subject = {subject} code = {code}/> : null}
         </Stack>
        
       </Container>
