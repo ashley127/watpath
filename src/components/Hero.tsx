@@ -10,6 +10,8 @@ import Typography from '@mui/material/Typography';
 import Data from "./Data";
 import { useState } from 'react';
 
+import { motion} from "framer-motion"
+
 export default function Hero() {
     const [showData, setData] = React.useState(false)
     const [subject, setSubject] = useState<string>('');
@@ -34,6 +36,12 @@ export default function Hero() {
       setInput(event.target.value);
     }
 
+    const visible = { opacity: 1, y: 0, transition: { duration: 0.5 } };
+    const itemVariants = {
+      hidden: { opacity: 0, y: 10 },
+      visible
+    };
+
   return (
     <Box
       id="hero"
@@ -52,11 +60,12 @@ export default function Hero() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          justifyContent: 'center',
           pt: { xs: 14, sm: 20 },
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
+        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' }, alignItems: 'center'}}>
           <Typography
             variant="h1"
             sx={{
@@ -68,57 +77,80 @@ export default function Hero() {
               fontFamily: 'sans-serif',
             }}
           >
-            Plan your&nbsp;
-            <Typography
-              component="span"
-              variant="h1"
-              sx={{
-                fontFamily: 'sans-serif',
-                fontSize: 'clamp(4rem, 11vw, 5rem)',
-                color: (theme) =>
-                  theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
+            <motion.article
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, transition: { duration: 1 } }}
+              variants={{ visible: { transition: { staggerChildren: 0.3 } } }}
+            >
+              <motion.p
+              variants={{
+                hidden: { opacity: 0, y: -20 },
+                visible
               }}
             >
-              future
-            </Typography>
-          </Typography>
-          <Typography
-            textAlign="center"
-            color="text.secondary"
-            sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
-          >
-            Search for a course.
-          </Typography>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            alignSelf="center"
-            spacing={1}
-            useFlexGap
-            sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
-          >
-            <TextField
-              id="outlined-basic"
-              hiddenLabel
-              size="small"
-              variant="outlined"
-              aria-label="Course code"
-              placeholder="CS 444"
-              value = {input}
-              onChange={handleChange}
-              inputProps={{
-                autoComplete: 'off',
-                'aria-label': 'Course code',
-              }}
-            />
-            <Button variant="contained" color="primary" onClick = {handleClick}>
-              Search
-            </Button>
-          </Stack>
-          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-            By clicking &quot;Start now&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
-              Terms & Conditions
-            </Link>
+                Plan your&nbsp;
+              <Typography
+                component="span"
+                variant="h1"
+                sx={{
+                  alignSelf: 'center',
+                  textAlign: 'center',
+                  fontFamily: 'sans-serif',
+                  fontSize: 'clamp(4rem, 11vw, 5rem)',
+                  color: (theme) =>
+                    theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
+                }}
+              >
+                future
+              </Typography>
+              </motion.p>
+
+              <motion.p variants={itemVariants}>
+                <Typography
+                  textAlign="center"
+                  color="text.secondary"
+                  sx={{ alignSelf: 'center'}}
+                >
+                Search for a course.
+                </Typography>
+              </motion.p>
+              
+              <motion.p variants={itemVariants}>
+                <Box  sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  width: '100%',
+                  justifyContent: 'center'
+                }}>
+                  <Stack
+                      direction={{ xs: 'column', sm: 'row' }}
+                      spacing={1} 
+                      useFlexGap
+                      flexWrap="wrap"
+                    >
+                    <TextField
+                      id="outlined-basic"
+                      hiddenLabel
+                      size="small"
+                      variant="outlined"
+                      aria-label="Course code"
+                      placeholder="CS 444"
+                      value = {input}
+                      onChange={handleChange}
+                      inputProps={{
+                        autoComplete: 'off',
+                        'aria-label': 'Course code',
+                      }}
+                    />
+                    <Button variant="contained" color="primary" onClick = {handleClick}>
+                      Search
+                    </Button>
+                  </Stack>
+                </Box>
+              </motion.p>
+            </motion.article>
           </Typography>
           {showData? <Data subject = {subject} code = {code}/> : null}
         </Stack>

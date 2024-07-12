@@ -10,9 +10,7 @@ import {
 } from '@xyflow/react';
  
 import '@xyflow/react/dist/style.css';
-import '../App.css'
 import CustomNode from '../components/CustomNode';
-import { BorderClear } from '@mui/icons-material';
 
 const nodeTypes = {
   custom: CustomNode,
@@ -22,7 +20,7 @@ const initialNodes = [
   { id: '1', type: 'input', position: { x: 0, y: 0 }, data: { label: 'Math 235' } },
   { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
   { id: '3', type: 'output', position: { x: 0, y: 200 }, data: { label: '3' } },
-  { id: '4', type: 'custom', position: { x: 0, y: 300 }, data: { label: 'Custom Node 1', borderColor:'red'} },
+  { id: '4', type: 'custom', position: { x: 0, y: 300 }, data: { title: 'Custom Node 1', subline: 'api.ts' } },
 ];
 const initialEdges = [
   { id: 'e1-2', source: '1', target: '2' },
@@ -41,7 +39,7 @@ export default function Playground() {
 
  
   return (
-    <div style={{ width: '100vw', height: '100vh' }} className='gradient'>
+    <div style={{ width: '100vw', height: '100vh', overflow: 'hidden'}}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
