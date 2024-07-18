@@ -9,8 +9,10 @@ import Hero from './components/Hero';
 import Footer from './components/Footer';
 import getLPTheme from '../src/getLPTheme';
 
+
+
 export default function LandingPage() {
-  const [mode, setMode] = React.useState<PaletteMode>('light');
+  const [mode, setMode] = React.useState<PaletteMode>('dark');
   const LPtheme = createTheme(getLPTheme(mode));
 
   const toggleColorMode = () => {
@@ -23,8 +25,6 @@ export default function LandingPage() {
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero />
       <Box sx={{ bgcolor: 'background.default' }}>
-        <Divider />
-        <Footer />
       </Box>
     </ThemeProvider>
   );
