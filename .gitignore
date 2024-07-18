@@ -12,6 +12,9 @@ secrets.json
 # production
 /build
 
+# data_ops
+src/data_ops/
+
 # misc
 .env
 .DS_Store
