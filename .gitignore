@@ -13,7 +13,7 @@ secrets.json
 /build
 
 # data_ops
-src/data_ops/
+#src/data_ops/
 
 # misc
 .env
