@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -11,6 +13,8 @@ import Data from "./Data";
 import { useState } from 'react';
 
 import { motion} from "framer-motion"
+ 
+import { PlaceholdersAndVanishInput } from './placeholders-and-vanish-input';
 
 export default function Hero() {
     const [showData, setData] = React.useState(false)
@@ -36,11 +40,24 @@ export default function Hero() {
       setInput(event.target.value);
     }
 
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      console.log("submitted");
+    };
+
     const visible = { opacity: 1, y: 0, transition: { duration: 0.5 } };
     const itemVariants = {
       hidden: { opacity: 0, y: 10 },
       visible
     };
+
+    const placeholders = [
+      "CS 444",
+      "ECE 358",
+      "CO 466",
+      "CS 492",
+      "CS 486",
+    ];
 
   return (
     <Box
@@ -65,7 +82,7 @@ export default function Hero() {
           pb: { xs: 8, sm: 12 },
         }}
       >
-        <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' }, alignItems: 'center'}}>
+        <Stack spacing={4} useFlexGap sx={{ width: { xs: '100%', sm: '70%' }, alignItems: 'center'}}>
           <Typography
             variant="h1"
             sx={{
@@ -110,46 +127,16 @@ export default function Hero() {
                 <Typography
                   textAlign="center"
                   color="text.secondary"
-                  sx={{ alignSelf: 'center'}}
+                  sx={{ alignSelf: 'center', fontSize: 'clamp(2rem, 6vw, 2rem)', marginTop:6}}
                 >
                 Search for a course.
                 </Typography>
               </motion.p>
-              
-              <motion.p variants={itemVariants}>
-                <Box  sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  width: '100%',
-                  justifyContent: 'center'
-                }}>
-                  <Stack
-                      direction={{ xs: 'column', sm: 'row' }}
-                      spacing={1} 
-                      useFlexGap
-                      flexWrap="wrap"
-                    >
-                    <TextField
-                      id="outlined-basic"
-                      hiddenLabel
-                      size="small"
-                      variant="outlined"
-                      aria-label="Course code"
-                      placeholder="CS 444"
-                      value = {input}
-                      onChange={handleChange}
-                      inputProps={{
-                        autoComplete: 'off',
-                        'aria-label': 'Course code',
-                      }}
-                    />
-                    <Button variant="contained" color="primary" onClick = {handleClick}>
-                      Search
-                    </Button>
-                  </Stack>
-                </Box>
-              </motion.p>
+              <PlaceholdersAndVanishInput
+                placeholders={placeholders}
+                onChange={handleChange}
+                onSubmit={onSubmit}
+              />
             </motion.article>
           </Typography>
           {showData? <Data subject = {subject} code = {code}/> : null}

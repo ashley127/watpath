@@ -41,7 +41,7 @@ const generateTermCode = (year: number, month: number): string => {
 };
 
 const generateApiUrl = (termCode: string, subject: string, code: string): string => {
-  return `https://openapi.data.uwaterloo.ca/v3/Courses/${termCode}/${subject}/${code}`;
+  return `https://openapi.data.uwaterloo.ca/v3/Courses/1249`;
 };
 
 const Data: React.FC<DataProps> = ({subject, code}) => {
@@ -121,6 +121,7 @@ const Data: React.FC<DataProps> = ({subject, code}) => {
             {posts.map((post) => (
             <li key={post.courseId}  style={{ padding: '10px 0' }}>
                 <h3 style={{ margin: 0 }}>{post.title}</h3>
+                <h2>{post.catalogNumber}</h2>
                 <p style={{ margin: 0 }}>{post.requirementsDescription}</p>
             </li>
             ))}
