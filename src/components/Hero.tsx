@@ -11,7 +11,11 @@ import { motion} from "framer-motion"
 import {PlaceholdersAndVanishInput} from './placeholders-and-vanish-input'
 import {BackgroundBeams} from './background-beams'
 
-export default function Hero() {
+interface HeroProps {
+  onSearchSubmit: (searchValue: string) => void;
+}
+
+export default function Hero({onSearchSubmit}:HeroProps) {
     const [searchValue, setSearchValue] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +25,8 @@ export default function Hero() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log('Form submitted with value:', searchValue);
+      onSearchSubmit(searchValue);
+      setSearchValue('');
     };
 
     const visible = { opacity: 1, y: 0, transition: { duration: 0.5 } };

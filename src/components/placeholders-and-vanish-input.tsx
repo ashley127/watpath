@@ -169,7 +169,7 @@ export function PlaceholdersAndVanishInput({
       );
       animate(maxX);
     }
-    setTimeout(() => navigate('/playground'), 2000);
+    setTimeout(() => navigate('/playground'), 1000);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
