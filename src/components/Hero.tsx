@@ -10,23 +10,32 @@ import { useState } from 'react';
 import { motion} from "framer-motion"
 import {PlaceholdersAndVanishInput} from './placeholders-and-vanish-input'
 import {BackgroundBeams} from './background-beams'
+import { useCourses } from './CourseContext';
 
 interface HeroProps {
   onSearchSubmit: (searchValue: string) => void;
 }
 
 export default function Hero({onSearchSubmit}:HeroProps) {
+    const { coursesMap, loading, error } = useCourses();
     const [searchValue, setSearchValue] = useState('');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchValue(e.target.value);
+        setSearchValue(e.target.value);
     };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log('Form submitted with value:', searchValue);
-      onSearchSubmit(searchValue);
-      setSearchValue('');
+        e.preventDefault();
+
+        if(!loading && !error) {
+            if(coursesMap.has(searchValue)) {
+                
+            }
+        }
+
+        console.log('Form submitted with value:', searchValue);
+        onSearchSubmit(searchValue);
+        setSearchValue('');
     };
 
     const visible = { opacity: 1, y: 0, transition: { duration: 0.5 } };

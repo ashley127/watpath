@@ -13,16 +13,15 @@ import TestCourses from './pages/TestCourses';
 
 
 const App= () => {
-
-  return (
-    <CoursesProvider>
-        <Routes>
-            <Route path = "/" element = {<LandingPage/>}/>
-            <Route path = "/playground" element = {<Playground/>}/>
-            <Route path = "/tc" element = {<TestCourses/>}/>
-        </Routes>
-    </CoursesProvider>
-    );
+    return (
+        <CoursesProvider>
+            <Routes>
+                <Route path = "/" element = {<LandingPage/>}/>
+                <Route path = "/playground" element = {<Playground/>}/>
+                <Route path = "/tc" element = {<TestCourses/>}/>
+            </Routes>
+        </CoursesProvider>
+        );
 }
 
 export default App
