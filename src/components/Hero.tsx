@@ -1,48 +1,26 @@
-"use client";
-
 import * as React from 'react';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Data from "./Data";
 import { useState } from 'react';
 
 import { motion} from "framer-motion"
- 
-import { PlaceholdersAndVanishInput } from './placeholders-and-vanish-input';
+import {PlaceholdersAndVanishInput} from './placeholders-and-vanish-input'
+import {BackgroundBeams} from './background-beams'
 
 export default function Hero() {
-    const [showData, setData] = React.useState(false)
-    const [subject, setSubject] = useState<string>('');
-    const [code, setCode] = useState<string>('');
-    const [input, setInput] = useState<string>('');
+    const [searchValue, setSearchValue] = useState('');
 
-    const handleClick = () => {
-      const regex = /^([a-zA-Z]+)\s+(\d+)$/;
-      const match = input.match(regex);
-
-      if (match) {
-        setSubject(match[1]);
-        setCode(match[2]);
-        setData(true);
-        setInput('');
-      } else {
-        setData(false);
-      }
-    }
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>{
-      setInput(event.target.value);
-    }
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(e.target.value);
+    };
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log("submitted");
+      console.log('Form submitted with value:', searchValue);
     };
 
     const visible = { opacity: 1, y: 0, transition: { duration: 0.5 } };
@@ -51,15 +29,10 @@ export default function Hero() {
       visible
     };
 
-    const placeholders = [
-      "CS 444",
-      "ECE 358",
-      "CO 466",
-      "CS 492",
-      "CS 486",
-    ];
 
   return (
+    <div>
+    <BackgroundBeams/>
     <Box
       id="hero"
       sx={(theme) => ({
@@ -83,8 +56,7 @@ export default function Hero() {
         }}
       >
         <Stack spacing={4} useFlexGap sx={{ width: { xs: '100%', sm: '70%' }, alignItems: 'center'}}>
-          <Typography
-            variant="h1"
+          <Box
             sx={{
               display: 'flex',
               flexDirection: { xs: 'column', md: 'row' },
@@ -100,7 +72,7 @@ export default function Hero() {
               exit={{ opacity: 0, transition: { duration: 1 } }}
               variants={{ visible: { transition: { staggerChildren: 0.3 } } }}
             >
-              <motion.p
+              <motion.div
               variants={{
                 hidden: { opacity: 0, y: -20 },
                 visible
@@ -121,9 +93,9 @@ export default function Hero() {
               >
                 future
               </Typography>
-              </motion.p>
+              </motion.div>
 
-              <motion.p variants={itemVariants}>
+              <motion.div variants={itemVariants}>
                 <Typography
                   textAlign="center"
                   color="text.secondary"
@@ -131,18 +103,25 @@ export default function Hero() {
                 >
                 Search for a course.
                 </Typography>
-              </motion.p>
-              <PlaceholdersAndVanishInput
-                placeholders={placeholders}
-                onChange={handleChange}
-                onSubmit={onSubmit}
-              />
+              </motion.div>
             </motion.article>
-          </Typography>
-          {showData? <Data subject = {subject} code = {code}/> : null}
+          </Box>
         </Stack>
+        <div className="h-[5rem] flex flex-col justify-center  items-center px-4"/>
+        <PlaceholdersAndVanishInput
+            placeholders={[
+              "CS 444",
+              "ECE 358",
+              "CO 466",
+              "CS 492",
+              "CS 486",
+            ]}
+            onChange={handleChange}
+            onSubmit={onSubmit}
+        />
        
       </Container>
     </Box>
+    </div>
   );
 }

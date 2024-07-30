@@ -9,6 +9,9 @@ import {
   ColorMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { PlaceholdersAndVanishInput } from '../components/placeholders-and-vanish-input';
+import FloatingSearch from '../components/FloatingSearch';
+
 
 const initialNodes = [
   {
@@ -45,7 +48,8 @@ function Playground() {
   );
 
   return (
-    <div style={{ height: '100%', width: '100%'}}>
+    <div style={{ height: '100%', width: '100%', backgroundColor: 'black'}}>
+      <FloatingSearch/>
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
