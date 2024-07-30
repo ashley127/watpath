@@ -1,6 +1,8 @@
 import json
 import boto3
 
+# to watch later for auth: https://www.youtube.com/watch?v=MXXq1M9gYY0
+
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('watpath')
