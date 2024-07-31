@@ -5,7 +5,6 @@ import Box from '@mui/material/Box';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AppAppBar from './components/AppAppBar';
 import Hero from './components/Hero';
-import Footer from './components/Footer';
 import getLPTheme from '../src/getLPTheme';
 
 interface LandingPageProps {
@@ -30,7 +29,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ setSearchCourse }) => {
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero onSearchSubmit={handleSearchSubmit} />
       <Box sx={{ bgcolor: 'background.default' }} />
-      <Footer />
     </ThemeProvider>
   );
 };
