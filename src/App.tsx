@@ -1,29 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import LandingPage from './LandingPage';
-import { Routes, Route} from 'react-router-dom';
-import Playground from './pages/Playground'
-import { CoursesProvider } from './components/CourseContext';
+import Playground from './pages/Playground';
 import TestCourses from './pages/TestCourses';
 import CoursesPath from './pages/CoursesPath';
+import { CoursesProvider } from './components/CourseContext';
 
+const App: React.FC = () => {
+  const [searchCourse, setSearchCourse] = useState<string>('');
+  const navigate = useNavigate();
 
-const App= () => {
-    return (
-        <CoursesProvider>
-            <Routes>
-                <Route path = "/" element = {<LandingPage/>}/>
-                <Route path = "/playground" element = {<Playground/>}/>
-                <Route path = "/tc" element = {<TestCourses/>}/>
-                <Route path = "/path" element = {<CoursesPath/>}/>
-            </Routes>
-        </CoursesProvider>
-        );
-}
+  const handleSearchSubmit = (searchValue: string) => {
+    setSearchCourse(searchValue);
+    navigate('/path');
+  };
 
-export default App
+  return (
+    <CoursesProvider>
+      <Routes>
+        <Route 
+          path="/" 
+          element={<LandingPage setSearchCourse={handleSearchSubmit} />} 
+        />
+        <Route path="/playground" element={<Playground />} />
+        <Route path="/tc" element={<TestCourses />} />
+        <Route 
+          path="/path" 
+          element={<CoursesPath searchCourse={searchCourse} />} 
+        />
+      </Routes>
+    </CoursesProvider>
+  );
+};
 
+export default App;

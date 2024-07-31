@@ -9,13 +9,9 @@ import {
   useEdgesState,
 } from '@xyflow/react';
 import dagre from 'dagre';
-
 import '@xyflow/react/dist/style.css';
 import { useCourses } from '../components/CourseContext';
-
 import { PlaceholdersAndVanishInput } from '../components/placeholders-and-vanish-input';
-
-import { useSearchParams } from 'react-router-dom';
 
 const buildBlueprint = (course, coursesMap) => {
   let nodes = [];
@@ -57,7 +53,7 @@ const buildBlueprint = (course, coursesMap) => {
           id: `TreeConnection${treeMappingConnectionCnt}`,
           source: `TreeNode${treeMapping.get(course)}`,
           target: `TreeNode${treeMapping.get(c)}`,
-          type: 'straight', // Use straight connection lines
+          type: 'straight',
         });
         treeMappingConnectionCnt++;
       });
@@ -71,20 +67,38 @@ const buildBlueprint = (course, coursesMap) => {
   return { nodes, edges };
 };
 
-const LayoutFlow = () => {
+const CoursesPath = ({ searchCourse }) => {
   const { coursesMap, loading, error } = useCourses();
-  const dagreGraph = new dagre.graphlib.Graph();
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [userInput, setUserInput] = useState(searchCourse);
 
-  const nodeWidth = 172;
-  const nodeHeight = 36;
+  useEffect(() => {
+    if (!loading && !error && coursesMap.size > 0) {
+      const blueprint = buildBlueprint(userInput, coursesMap);
+
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+        blueprint.nodes,
+        blueprint.edges
+      );
+
+      setNodes(layoutedNodes);
+      setEdges(layoutedEdges);
+    }
+  }, [coursesMap, loading, error, userInput]);
 
   const getLayoutedElements = (nodes, edges, direction = 'LR') => {
+    const dagreGraph = new dagre.graphlib.Graph();
+    dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+    const nodeWidth = 172;
+    const nodeHeight = 36;
+
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({
       rankdir: direction,
-      ranksep: 10,  // Adjust to reduce the distance between levels
-      nodesep: 10,  // Adjust to reduce the distance between nodes
+      ranksep: 10,
+      nodesep: 10,
     });
 
     nodes.forEach((node) => {
@@ -99,7 +113,7 @@ const LayoutFlow = () => {
 
     const newNodes = nodes.map((node) => {
       const nodeWithPosition = dagreGraph.node(node.id);
-      const newNode = {
+      return {
         ...node,
         targetPosition: isHorizontal ? 'left' : 'top',
         sourcePosition: isHorizontal ? 'right' : 'bottom',
@@ -108,38 +122,16 @@ const LayoutFlow = () => {
           y: nodeWithPosition.y - nodeHeight / 2,
         },
       };
-
-      return newNode;
     });
 
     return { nodes: newNodes, edges };
   };
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const searchValue = searchParams.get('search') || '';
-  const [userInput, setUserInput] = useState(searchValue);
-
-  useEffect(() => {
-    if (!loading && !error && coursesMap.size > 0) {
-      const blueprint = buildBlueprint(userInput, coursesMap); // Replace with the actual root course
-
-      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-        blueprint.nodes,
-        blueprint.edges,
-      );
-
-      setNodes(layoutedNodes);
-      setEdges(layoutedEdges);
-    }
-  }, [coursesMap, loading, error, userInput]);
-
   const onConnect = useCallback(
     (params) =>
       setEdges((eds) =>
         addEdge(
-          { ...params, type: 'straight' }, // Use straight connection lines
+          { ...params, type: 'straight' },
           eds
         )
       ),
@@ -157,36 +149,28 @@ const LayoutFlow = () => {
     [nodes, edges]
   );
 
-
   const handleChange = (e) => {
     setUserInput(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setSearchParams({ search: searchValue });
-    setUserInput('')
-  };
-
-  const saveValue = (value) => {
-    console.log('Saving value:', value);
-    // Example: Save value to local storage
-    localStorage.setItem('searchValue', value);
-    // Example: You might also want to send this value to an API
+    setUserInput(userInput);
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-
   return (
     <div style={{ height: '100%', width: '100%', backgroundColor: 'black', position: 'relative' }}>
       <div style={{ position: 'absolute', top: '60px', left: '50%', transform: 'translateX(-50%)', width: '90%', zIndex: 1000 }}>
-        <PlaceholdersAndVanishInput
-          placeholders={['Search for a course', 'The future is in yours']}
-          onChange={handleChange}
-          onSubmit={onSubmit}
-        />
+        <form onSubmit={onSubmit}>
+          <PlaceholdersAndVanishInput
+            placeholders={['Search for a course', 'The future is in yours']}
+            onChange={handleChange}
+            value={userInput}
+          />
+        </form>
       </div>
       <ReactFlow
         nodes={nodes}
@@ -194,7 +178,7 @@ const LayoutFlow = () => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
-        connectionLineType='straight' // Use straight connection lines
+        connectionLineType='straight'
         colorMode='dark'
         fitView
       >
@@ -205,4 +189,4 @@ const LayoutFlow = () => {
   );
 };
 
-export default LayoutFlow;
+export default CoursesPath;
