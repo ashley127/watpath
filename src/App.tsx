@@ -6,7 +6,6 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import LandingPage from './LandingPage';
-import Playground from './pages/Playground';
 import TestCourses from './pages/TestCourses';
 import CoursesPath from './pages/CoursesPath';
 import { CoursesProvider } from './components/CourseContext';
@@ -27,7 +26,6 @@ const App: React.FC = () => {
           path="/" 
           element={<LandingPage setSearchCourse={handleSearchSubmit} />} 
         />
-        <Route path="/playground" element={<Playground />} />
         <Route path="/tc" element={<TestCourses />} />
         <Route 
           path="/path" 

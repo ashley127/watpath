@@ -1,8 +1,8 @@
+// CoursesPath.jsx
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   addEdge,
-  ConnectionLineType,
   Controls,
   Background,
   useNodesState,
@@ -71,7 +71,8 @@ const CoursesPath = ({ searchCourse }) => {
   const { coursesMap, loading, error } = useCourses();
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [userInput, setUserInput] = useState(searchCourse);
+  const [inputValue, setInputValue] = useState(''); // Temporary input value
+  const [userInput, setUserInput] = useState(searchCourse); // Final search term
 
   useEffect(() => {
     if (!loading && !error && coursesMap.size > 0) {
@@ -150,12 +151,12 @@ const CoursesPath = ({ searchCourse }) => {
   );
 
   const handleChange = (e) => {
-    setUserInput(e.target.value);
+    setInputValue(e.target.value); // Update the temporary input value
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setUserInput(userInput);
+    setUserInput(inputValue); // Only update the final search term when "Enter" is pressed
   };
 
   if (loading) return <div>Loading...</div>;
@@ -164,13 +165,12 @@ const CoursesPath = ({ searchCourse }) => {
   return (
     <div style={{ height: '100%', width: '100%', backgroundColor: 'black', position: 'relative' }}>
       <div style={{ position: 'absolute', top: '60px', left: '50%', transform: 'translateX(-50%)', width: '90%', zIndex: 1000 }}>
-        <form onSubmit={onSubmit}>
-          <PlaceholdersAndVanishInput
-            placeholders={['Search for a course', 'The future is in yours']}
-            onChange={handleChange}
-            value={userInput}
-          />
-        </form>
+        <PlaceholdersAndVanishInput
+          placeholders={['Search for a course', 'The future is in yours']}
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          value={inputValue} // Bind the input to the temporary input value
+        />
       </div>
       <ReactFlow
         nodes={nodes}
