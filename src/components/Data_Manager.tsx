@@ -35,7 +35,6 @@ const useFetchCourses = (): [Map<string, Course>, boolean, string | null] => {
 
                 setCoursesMap(allCoursesMap);
 
-                console.log(coursesMap);
             } catch (err) {
                 setError('Failed to fetch courses data.');
                 console.error(err);
@@ -45,6 +44,8 @@ const useFetchCourses = (): [Map<string, Course>, boolean, string | null] => {
         };
 
         fetchData();
+        console.log("fetch data complete", coursesMap.size)
+
     }, []);
 
     return [coursesMap, loading, error];
