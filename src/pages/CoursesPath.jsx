@@ -97,8 +97,7 @@ dagreGraph.setDefaultEdgeLabel(() => ({}));
 const nodeWidth = 172;
 const nodeHeight = 36;
 
-const getLayoutedElements = (nodes, edges, direction = 'TB') => {
-  const isHorizontal = direction === 'LR';
+const getLayoutedElements = (nodes, edges, direction = 'LR') => {
   dagreGraph.setGraph({ rankdir: direction });
 
   nodes.forEach((node) => {
@@ -115,8 +114,8 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const newNode = {
       ...node,
-      targetPosition: isHorizontal ? 'left' : 'top',
-      sourcePosition: isHorizontal ? 'right' : 'bottom',
+      targetPosition: 'left',
+      sourcePosition: 'right',
       position: {
         x: nodeWithPosition.x - nodeWidth / 2,
         y: nodeWithPosition.y - nodeHeight / 2,
