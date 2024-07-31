@@ -3,15 +3,19 @@ import {
   ReactFlow,
   addEdge,
   ConnectionLineType,
-  Panel,
+  Controls,
+  Background,
   useNodesState,
   useEdgesState,
 } from '@xyflow/react';
 import dagre from 'dagre';
+import { useState } from 'react';
 
 import '@xyflow/react/dist/style.css';
 
-//
+import { PlaceholdersAndVanishInput } from '../components/placeholders-and-vanish-input';
+
+import { useSearchParams } from 'react-router-dom';
 
 const position = { x: 0, y: 0 };
 const edgeType = 'smoothstep';
@@ -144,6 +148,7 @@ const LayoutFlow = () => {
       ),
     [],
   );
+  const [searchValue, setSearchValue] = useState('');
   const onLayout = useCallback(
     (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
@@ -155,21 +160,38 @@ const LayoutFlow = () => {
     [nodes, edges],
   );
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const handleChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setSearchParams({ search: searchValue });
+  };
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      connectionLineType={ConnectionLineType.SmoothStep}
-      fitView
-    >
-      <Panel position="top-right">
-        <button onClick={() => onLayout('TB')}>vertical layout</button>
-        <button onClick={() => onLayout('LR')}>horizontal layout</button>
-      </Panel>
-    </ReactFlow>
+    <div style={{ height: '100%', width: '100%', backgroundColor: 'black', position: 'relative' }}>
+      <div style={{ position: 'absolute', top: '60px', left: '50%', transform: 'translateX(-50%)', width: '90%', zIndex: 1000 }}>
+        <PlaceholdersAndVanishInput
+          placeholders={['Search for a course', 'The future is in yours']}
+          onChange={handleChange}
+          onSubmit={onSubmit}
+        />
+      </div>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        connectionLineType={ConnectionLineType.SmoothStep}
+        colorMode='dark'
+        fitView
+      >
+        <Background />
+        <Controls />
+      </ReactFlow>
+    </div>
   );
 };
 

@@ -12,7 +12,6 @@ import TestCourses from './pages/TestCourses';
 import CoursesPath from './pages/CoursesPath';
 
 
-
 const App= () => {
     return (
         <CoursesProvider>

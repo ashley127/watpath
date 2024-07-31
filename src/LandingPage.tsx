@@ -19,7 +19,7 @@ export default function LandingPage() {
     }
     const navigate = useNavigate();
     const handleSearchSubmit = (searchValue: string) => {
-      navigate(`/playground?search=${searchValue}`);
+      console.log('submit')
     }
 
   return (

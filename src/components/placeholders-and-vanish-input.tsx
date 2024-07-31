@@ -48,6 +48,7 @@ export function PlaceholdersAndVanishInput({
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const draw = useCallback(() => {
@@ -152,12 +153,13 @@ export function PlaceholdersAndVanishInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !animating) {
-      vanishAndSubmit();
+    if (e.key === "Enter" && !animating && !isSubmitting) {
+      handleSubmit(e as any);
     }
   };
 
-  const vanishAndSubmit = () => {
+  const vanishAndSubmit = (searchValue: string) => {
+    setIsSubmitting(true);
     setAnimating(true);
     draw();
 
@@ -169,13 +171,18 @@ export function PlaceholdersAndVanishInput({
       );
       animate(maxX);
     }
-    setTimeout(() => navigate('/playground'), 1000);
+    setTimeout(() =>{
+        navigate(`/playground?search=${searchValue}`);
+        setIsSubmitting(false);
+      }, 2000);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    vanishAndSubmit();
-    onSubmit && onSubmit(e);
+    if (!isSubmitting) {
+      vanishAndSubmit(value);
+      onSubmit && onSubmit(e);
+    }
   };
   return (
     <form

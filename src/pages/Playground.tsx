@@ -76,8 +76,7 @@ function Playground() {
     const searchValue = searchParams.get('search');
     if (searchValue) {
       addNodeToPlayground(searchValue);
-      // Clear the search parameter immediately
-      setSearchParams({});
+      setSearchParams({}, { replace: true }); // Clean up URL
     }
   }, [searchParams, setSearchParams, addNodeToPlayground]);
 
@@ -89,7 +88,7 @@ function Playground() {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted with value:', searchValue);
+    setSearchParams({ search: searchValue });
   };
 
   return (
