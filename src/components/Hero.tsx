@@ -11,12 +11,14 @@ import { motion} from "framer-motion"
 import {PlaceholdersAndVanishInput} from './placeholders-and-vanish-input'
 import {BackgroundBeams} from './background-beams'
 import { useCourses } from './CourseContext';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroProps {
   onSearchSubmit: (searchValue: string) => void;
 }
 
 export default function Hero({onSearchSubmit}:HeroProps) {
+    const navigate = useNavigate();
     const { coursesMap, loading, error } = useCourses();
     const [searchValue, setSearchValue] = useState('');
 
@@ -32,7 +34,9 @@ export default function Hero({onSearchSubmit}:HeroProps) {
                 
             }
         }
-
+        setTimeout(() =>{
+          navigate('/path');
+        }, 2000);
         console.log('Form submitted with value:', searchValue);
         onSearchSubmit(searchValue);
         setSearchValue('');

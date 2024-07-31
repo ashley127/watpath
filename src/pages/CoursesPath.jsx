@@ -79,12 +79,12 @@ const LayoutFlow = () => {
   const nodeWidth = 172;
   const nodeHeight = 36;
 
-  const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+  const getLayoutedElements = (nodes, edges, direction = 'LR') => {
     const isHorizontal = direction === 'LR';
     dagreGraph.setGraph({
       rankdir: direction,
-      ranksep: 50,  // Adjust to reduce the distance between levels
-      nodesep: 50,  // Adjust to reduce the distance between nodes
+      ranksep: 10,  // Adjust to reduce the distance between levels
+      nodesep: 10,  // Adjust to reduce the distance between nodes
     });
 
     nodes.forEach((node) => {
@@ -97,17 +97,17 @@ const LayoutFlow = () => {
 
     dagre.layout(dagreGraph);
 
-  const newNodes = nodes.map((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    const newNode = {
-      ...node,
-      targetPosition: isHorizontal ? 'left' : 'top',
-      sourcePosition: isHorizontal ? 'right' : 'bottom',
-      position: {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
-      },
-    };
+    const newNodes = nodes.map((node) => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+      const newNode = {
+        ...node,
+        targetPosition: isHorizontal ? 'left' : 'top',
+        sourcePosition: isHorizontal ? 'right' : 'bottom',
+        position: {
+          x: nodeWithPosition.x - nodeWidth / 2,
+          y: nodeWithPosition.y - nodeHeight / 2,
+        },
+      };
 
       return newNode;
     });
@@ -117,10 +117,13 @@ const LayoutFlow = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchValue = searchParams.get('search') || '';
+  const [userInput, setUserInput] = useState(searchValue);
 
   useEffect(() => {
     if (!loading && !error && coursesMap.size > 0) {
-      const blueprint = buildBlueprint("CS 444", coursesMap); // Replace with the actual root course
+      const blueprint = buildBlueprint(userInput, coursesMap); // Replace with the actual root course
 
       const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
         blueprint.nodes,
@@ -130,7 +133,7 @@ const LayoutFlow = () => {
       setNodes(layoutedNodes);
       setEdges(layoutedEdges);
     }
-  }, [coursesMap, loading, error]);
+  }, [coursesMap, loading, error, userInput]);
 
   const onConnect = useCallback(
     (params) =>
@@ -143,7 +146,6 @@ const LayoutFlow = () => {
     [setEdges]
   );
 
-  const [searchValue, setSearchValue] = useState('');
   const onLayout = useCallback(
     (direction) => {
       const { nodes: layoutedNodes, edges: layoutedEdges } =
@@ -155,18 +157,27 @@ const LayoutFlow = () => {
     [nodes, edges]
   );
 
-  const [searchParams, setSearchParams] = useSearchParams();
+
   const handleChange = (e) => {
-    setSearchValue(e.target.value);
+    setUserInput(e.target.value);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     setSearchParams({ search: searchValue });
+    setUserInput('')
+  };
+
+  const saveValue = (value) => {
+    console.log('Saving value:', value);
+    // Example: Save value to local storage
+    localStorage.setItem('searchValue', value);
+    // Example: You might also want to send this value to an API
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+
 
   return (
     <div style={{ height: '100%', width: '100%', backgroundColor: 'black', position: 'relative' }}>

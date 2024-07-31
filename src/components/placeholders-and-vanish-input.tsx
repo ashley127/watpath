@@ -49,7 +49,7 @@ export function PlaceholdersAndVanishInput({
   const [value, setValue] = useState("");
   const [animating, setAnimating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
+
 
   const draw = useCallback(() => {
     if (!inputRef.current) return;
@@ -171,10 +171,6 @@ export function PlaceholdersAndVanishInput({
       );
       animate(maxX);
     }
-    setTimeout(() =>{
-        navigate(`/playground?search=${searchValue}`);
-        setIsSubmitting(false);
-      }, 2000);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
